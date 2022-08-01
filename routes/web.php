@@ -11,10 +11,13 @@
 |
 */
 
-// use App\Http\Controllers\PostController;
+use App\Http\Controllers\Auth\LoginController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/login','LoginController@login')->name('login');
+Route::post('/do-login','LoginController@doLogin')->name('do-login');
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect()->route('login');
+})->name('logout');
 
-Route::resource('/posts',PostController::class);
+Route::resource('/posts',PostController::class)->middleware('checklogin');

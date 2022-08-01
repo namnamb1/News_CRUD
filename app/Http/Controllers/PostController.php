@@ -38,7 +38,20 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-       
+        // $user = Post::create([
+        //     'title' => $request->title,
+        //     'content' => $request->content,
+        //     'create_by' => $request->,
+        // ]);
+
+        // if ($request->hasFile('image')) {
+        //     $newFileName = uniqid() . '-' . $request->image->getClientOriginalName();
+        //     $imagePath = $request->image->storeAs(config('common.default_image_path') . 'users', $newFileName);
+        //     $user->image = str_replace(config('common.default_image_path') . 'users', '', $imagePath);
+        // }
+        // $user->save();
+
+        // return redirect('/posts')->with(['message' => 'Add Success']);
     }
 
     /**
