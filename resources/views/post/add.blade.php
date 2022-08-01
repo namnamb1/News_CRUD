@@ -11,7 +11,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <form action="{{ route('posts.store') }}" method="post" enctype="multipart/form-data">
-                                    @csrf
+                                        @csrf
                                         <div class="mb-3">
                                             <label for="simpleinput" class="form-label">Tiêu đề</label>
                                             <input type="text" id="simpleinput" class="form-control" name="title">
@@ -19,12 +19,16 @@
 
                                         <div class="row g-2">
                                             <div class="mb-3 col-md-4">
-                                                <label for="inputState" class="form-label">Category</label>
-                                                <select id="inputState" class="form-select">
+                                                <label for="simpleinput" class="form-label">Danh mục</label>
                                                 @foreach($categories as $category)
-                                                    <option value="{{$category->id}}">{{$category->name}}</option>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="{{$category->id}}" name="category">
+                                                    <label class="form-check-label" for="flexCheckDefault">
+                                                        {{ $category->name }}
+                                                    </label>
+                                                </div>
                                                 @endforeach
-                                                </select>
+
                                             </div>
                                             <div class="mb-3 col-md-4">
                                                 <label for="inputZip" class="form-label">Ảnh đại diện</label>

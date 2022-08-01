@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\CategoryPost;
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -38,20 +40,24 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // $user = Post::create([
-        //     'title' => $request->title,
-        //     'content' => $request->content,
-        //     'create_by' => $request->,
-        // ]);
+            
+        $cate_id = $request->category;
+        dd($cate_id);
+            $categories = explode(',', $categories);
+            foreach ($categories as $category) {
+                CategoryPost::create([
+                    'post_id' => $post->id,
+                    'category_id' => $cate_id
+                ]);
+            }
+            
+        $post = Post::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'create_by' => Auth::user()->id,
+        ]);
 
-        // if ($request->hasFile('image')) {
-        //     $newFileName = uniqid() . '-' . $request->image->getClientOriginalName();
-        //     $imagePath = $request->image->storeAs(config('common.default_image_path') . 'users', $newFileName);
-        //     $user->image = str_replace(config('common.default_image_path') . 'users', '', $imagePath);
-        // }
-        // $user->save();
-
-        // return redirect('/posts')->with(['message' => 'Add Success']);
+        
     }
 
     /**
