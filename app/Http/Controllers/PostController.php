@@ -17,7 +17,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        return view('post.index');
+        $posts = Post::all();
+        return view('post.index',compact('posts'));
     }
 
     /**
@@ -41,23 +42,15 @@ class PostController extends Controller
     public function store(Request $request)
     {
             
-        $cate_id = $request->category;
-        dd($cate_id);
-            $categories = explode(',', $categories);
-            foreach ($categories as $category) {
-                CategoryPost::create([
-                    'post_id' => $post->id,
-                    'category_id' => $cate_id
-                ]);
-            }
-            
         $post = Post::create([
             'title' => $request->title,
             'content' => $request->content,
+            'image' => 1,
             'create_by' => Auth::user()->id,
         ]);
 
-        
+        Post::find($post->id)->category()->attach($request->category);
+        return view('post.index');
     }
 
     /**
@@ -79,7 +72,10 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::with('category')->find($id);
+        $categories = Category::all();
+
+        return view('post.edit',compact('post','categories'));
     }
 
     /**
@@ -91,7 +87,17 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post = Post::find($id);
+        $post->fill([
+            'title' => $request->title,
+            'content' => $request->content,
+            'image' => 1,
+            'create_by' => Auth::user()->id,
+        ]);
+        Post::find($id)->category()->sync($request->category);
+
+        return redirect('/posts');
+        
     }
 
     /**
@@ -102,6 +108,8 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Post::findOrFail($id)->delete();
+
+        return redirect()->back()->with(['message' => 'Delete Success']);
     }
 }
