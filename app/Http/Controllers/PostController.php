@@ -124,8 +124,8 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
+        Post::findOrFail($id)->hasCategory()->delete();
         Post::findOrFail($id)->delete();
-
         return redirect()->back()->with(['message' => 'Delete Success']);
     }
 
@@ -138,9 +138,9 @@ class PostController extends Controller
 
         $posts = Post::where('title', 'like', "%" . $keyword . "%");
         if ($request->author) {
-            $posts->where('create_by', $request->author)->get();
+            $posts->where('create_by', $request->author);
         }
-
+       
         if ($start_date) {
             $start_date = date('Y-m-d', strtotime($start_date));
             $posts = $posts->where('created_at', '>=', $start_date);
@@ -148,6 +148,9 @@ class PostController extends Controller
         if ($end_date) {
             $end_date = date('Y-m-d', strtotime($end_date));
             $posts = $posts->where('created_at', '<=', $end_date);
+        }
+        if ($category) {
+            $posts = Post::join('category_posts', 'posts.id', '=', 'category_posts.post_id')->where('category_id', $category);
         }
 
         $posts = $posts->get();

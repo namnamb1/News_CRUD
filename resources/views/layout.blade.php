@@ -111,7 +111,7 @@
                                     <option value="">Tác giả</option>
                                     @if(isset($author))
                                     @foreach($author as $val)
-                                    <option value="{{ $val->id }}" {{ \Request::get('author') == $val->id ? "selected ='selected'" : "" }}> {{ $val->name }} </option>
+                                    <option value="{{ $val->id }}" > {{ $val->name }} </option>
                                     @endforeach
                                     @endif
                                 </select>
@@ -121,26 +121,18 @@
                                     <option value="">Danh mục</option>
                                     @if(isset($categories))
                                     @foreach($categories as $val)
-                                    <option value="{{ $val->id }}" {{ \Request::get('category') == $val->id ? "selected ='selected'" : "" }}> {{ $val->name }} </option>
+                                    <option value="{{ $val->id }}"> {{ $val->name }} </option>
                                     @endforeach
                                     @endif
                                 </select>
                             </div>
                             <div class="mb-3 col-md-2">
-                                <div id="datepicker" class="input-group date" data-date-format="dd-mm-yyyy">
-                                    <input class="form-control" readonly="" type="text" value="" name="date">
-                                    <span class="input-group-addon">
-                                        <i class="glyphicon glyphicon-calendar"></i>
-                                </span>
-                                </div>
-                            </div>
+                                <!-- <div id="datepicker" class="input-group date" data-date-format="dd-mm-yyyy"> -->
+                                    <input type="text" id="timeCheckIn" class="form-control" name="date" placeholder="Chọn ngày bắt đầu">
+                                <!-- </div> -->
+                            </div>  
                             <div class="mb-3 col-md-2">
-                                <div id="datepicker1" class="input-group date" data-date-format="dd-mm-yyyy">
-                                    <input class="form-control" readonly="" type="text" value="" name="end_date">
-                                    <span class="input-group-addon">
-                                        <i class="glyphicon glyphicon-calendar"></i>
-                                </span>
-                                </div>
+                            <input type="text" id="timeCheckOut" class="form-control" name="end_date" placeholder="Chọn ngày kết thúc">
                             </div>
                             <div class="mb-3 col-md-4">
                                 <button type="submit" class="btn btn-primary">Tìm kiếm</button>
@@ -350,20 +342,34 @@
     <!-- demo app -->
     <script src="https://coderthemes.com/hyper/saas/assets/js/pages/demo.dashboard.js"></script>
     <!-- end demo js-->
-    <script type="text/javascript">
-        $(function () {  
-        $("#datepicker").datepicker({         
-        autoclose: true,         
-        todayHighlight: true 
-        }).datepicker('update', new Date());
-        });
-        $(function () {  
-        $("#datepicker1").datepicker({         
-        autoclose: true,         
-        todayHighlight: true 
-        }).datepicker('update', new Date());
-        });
-    </script>
+    <script>
+    $(function () {
+        'use strict';
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+        var checkin = $('#timeCheckIn').datepicker({
+            onRender: function (date) {
+                return date.valueOf() < now.valueOf() ? 'disabled' : '';
+            }
+        }).on('changeDate', function (ev) {
+            if (ev.date.valueOf() > checkout.date.valueOf()) {
+                var newDate = new Date(ev.date)
+                newDate.setDate(newDate.getDate() + 1);
+                checkout.setValue(newDate);
+            }
+            checkin.hide();
+            $('#timeCheckOut')[0].focus();
+        }).data('datepicker');
+        var checkout = $('#timeCheckOut').datepicker({
+            onRender: function (date) {
+                return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+            }
+        }).on('changeDate', function (ev) {
+            checkout.hide();
+        }).data('datepicker');
+    });
+</script>
 </body>
 
 </html>
