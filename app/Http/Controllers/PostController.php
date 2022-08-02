@@ -129,16 +129,31 @@ class PostController extends Controller
         return redirect()->back()->with(['message' => 'Delete Success']);
     }
 
-    public function homePage(Request $request )
+    public function homePage(Request $request)
     {
         $keyword = $request->keyword;
+        $start_date = $request->date;
+        $end_date = $request->end_date;
+        $category = $request->category;
+
         $posts = Post::where('title', 'like', "%" . $keyword . "%");
-        if($request->author){
+        if ($request->author) {
             $posts->where('create_by', $request->author)->get();
         }
+
+        if ($start_date) {
+            $start_date = date('Y-m-d', strtotime($start_date));
+            $posts = $posts->where('created_at', '>=', $start_date);
+        }
+        if ($end_date) {
+            $end_date = date('Y-m-d', strtotime($end_date));
+            $posts = $posts->where('created_at', '<=', $end_date);
+        }
+
         $posts = $posts->get();
         $author = User::all();
+        $categories = Category::all();
 
-        return view('post.home', compact('posts','author'));
+        return view('post.home', compact('posts', 'author', 'categories'));
     }
 }

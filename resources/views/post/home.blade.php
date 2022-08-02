@@ -15,7 +15,7 @@
                     <h3 class="mb-0">
                         <a class="text-dark" href="{{ route('posts.show', $val->id) }}">{{ $val->title }}</a>
                     </h3>
-                    <div class="mb-1 text-muted">by {{ $val->author->name}}</div>
+                    <div class="mb-1 text-muted">{{ $val->created_at}} by {{ $val->author->name}}</div>
                     <p class="card-text mb-auto"></p>
                     <a href="{{ route('posts.show', $val->id) }}">Xem chi tiết</a>
                 </div>
