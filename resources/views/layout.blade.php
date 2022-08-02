@@ -55,7 +55,7 @@
                         <li class="side-nav-title side-nav-item">Navigation</li>
 
                         <li class="side-nav-item">
-                            <a data-bs-toggle="collapse" href="#sidebarDashboards" aria-expanded="false" aria-controls="sidebarDashboards" class="side-nav-link">
+                            <a class="side-nav-link" href="{{asset('/')}}">
                                 <i class="uil-home-alt"></i>
                                 <span> Dashboards </span>
                             </a>
@@ -102,18 +102,25 @@
                 <div class="content">
                     <!-- Topbar Start -->
                     <div class="navbar-custom">
-                        
-                        <button class="button-menu-mobile open-left">
-                            <i class="mdi mdi-menu"></i>
-                        </button>
                         <div class="app-search dropdown d-none d-lg-block">
-                            <form>
-                                <div class="input-group">
-                                    <input type="text" class="form-control dropdown-toggle" placeholder="Search..." id="top-search">
-                                    <span class="mdi mdi-magnify search-icon"></span>
-                                    <button class="input-group-text btn-primary" type="submit">Search</button>
-                                </div>
-                            </form>
+                        <form class="row" style="margin-bottom:20px !important">
+                            <div class="col-md-6">
+                                <input type="search" name="keyword" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2">
+                            </div>
+                            <div class="col-md-6">
+                                <select name="author" class="form-select  mb-3">
+                                    <option value="">Tác giả</option>
+                                    @if(isset($author))
+                                        @foreach($author as $val)
+                                        <option value="{{ $val->id }}" {{ \Request::get('author') == $val->id ? "selected ='selected'" : "" }}> {{ $val->name }} </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                            </div>
+                        </form>
 
                             <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
                                 <!-- item-->

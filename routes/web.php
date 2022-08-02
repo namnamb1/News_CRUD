@@ -14,7 +14,7 @@
 use App\Http\Controllers\Auth\LoginController;
 
 Route::get('/login', 'LoginController@login')->name('login');
-
+Route::get('/', 'PostController@homePage');
 Route::post('/do-login', 'LoginController@doLogin')->name('do-login');
 
 Route::get('/logout', function () {

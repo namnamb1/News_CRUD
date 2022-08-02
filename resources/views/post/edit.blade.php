@@ -35,6 +35,7 @@
                                             <div class="mb-3 col-md-4">
                                                 <label for="inputZip" class="form-label">Ảnh đại diện</label>
                                                 <input type="file" class="form-control" id="inputZip" name="image">
+                                                <img class="card-img-right flex-auto d-none d-md-block" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="{{asset('storage/' . $post->image)}}" data-holder-rendered="true">
                                             </div>
                                         </div>
 

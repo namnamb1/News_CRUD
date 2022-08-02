@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\CategoryPost;
 use App\Post;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +19,8 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        return view('post.index',compact('posts'));
+
+        return view('post.index', compact('posts'));
     }
 
     /**
@@ -41,16 +43,22 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-            
+
         $post = Post::create([
             'title' => $request->title,
             'content' => $request->content,
-            'image' => 1,
             'create_by' => Auth::user()->id,
         ]);
+        // dd($request->hasFile('image'));
+        if ($request->hasFile('image')) {
+            $newFileName = uniqid() . '-' . $request->image->getClientOriginalName();
+            $imagePath = $request->image->storeAs('public/images/', $newFileName);
+            $post->image = str_replace('public', '', $imagePath);
+        }
+        $post->save();
 
         Post::find($post->id)->category()->attach($request->category);
-        return view('post.index');
+        return redirect('posts');
     }
 
     /**
@@ -61,7 +69,9 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::find($id);
+
+        return view('post.detail', compact('post'));
     }
 
     /**
@@ -75,7 +85,7 @@ class PostController extends Controller
         $post = Post::with('category')->find($id);
         $categories = Category::all();
 
-        return view('post.edit',compact('post','categories'));
+        return view('post.edit', compact('post', 'categories'));
     }
 
     /**
@@ -91,13 +101,19 @@ class PostController extends Controller
         $post->fill([
             'title' => $request->title,
             'content' => $request->content,
-            'image' => 1,
             'create_by' => Auth::user()->id,
         ]);
+
+        if ($request->hasFile('image')) {
+            $newFileName = uniqid() . '-' . $request->image->getClientOriginalName();
+            $imagePath = $request->image->storeAs('public/images/', $newFileName);
+            $post->image = str_replace('public', '', $imagePath);
+        }
+        $post->save();
+
         Post::find($id)->category()->sync($request->category);
 
         return redirect('/posts');
-        
     }
 
     /**
@@ -111,5 +127,18 @@ class PostController extends Controller
         Post::findOrFail($id)->delete();
 
         return redirect()->back()->with(['message' => 'Delete Success']);
+    }
+
+    public function homePage(Request $request )
+    {
+        $keyword = $request->keyword;
+        $posts = Post::where('title', 'like', "%" . $keyword . "%");
+        if($request->author){
+            $posts->where('create_by', $request->author)->get();
+        }
+        $posts = $posts->get();
+        $author = User::all();
+
+        return view('post.home', compact('posts','author'));
     }
 }

@@ -16,6 +16,13 @@ class Post extends Model
 
     public function hasCategory()
     {
-        return $this->hasMany(CategoryPost::class,'post_id');
+        return $this->hasMany(CategoryPost::class, 'post_id');
     }
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'create_by');
+    }
+
+    
 }
