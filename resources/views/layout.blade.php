@@ -111,7 +111,7 @@
                                     <option value="">Tác giả</option>
                                     @if(isset($author))
                                     @foreach($author as $val)
-                                    <option value="{{ $val->id }}" > {{ $val->name }} </option>
+                                    <option value="{{ $val->id }}"> {{ $val->name }} </option>
                                     @endforeach
                                     @endif
                                 </select>
@@ -128,11 +128,11 @@
                             </div>
                             <div class="mb-3 col-md-2">
                                 <!-- <div id="datepicker" class="input-group date" data-date-format="dd-mm-yyyy"> -->
-                                    <input type="text" id="timeCheckIn" class="form-control" name="date" placeholder="Chọn ngày bắt đầu">
+                                <input type="text" id="timeCheckIn" class="form-control" name="date" placeholder="Chọn ngày bắt đầu">
                                 <!-- </div> -->
-                            </div>  
+                            </div>
                             <div class="mb-3 col-md-2">
-                            <input type="text" id="timeCheckOut" class="form-control" name="end_date" placeholder="Chọn ngày kết thúc">
+                                <input type="text" id="timeCheckOut" class="form-control" name="end_date" placeholder="Chọn ngày kết thúc">
                             </div>
                             <div class="mb-3 col-md-4">
                                 <button type="submit" class="btn btn-primary">Tìm kiếm</button>
@@ -342,34 +342,66 @@
     <!-- demo app -->
     <script src="https://coderthemes.com/hyper/saas/assets/js/pages/demo.dashboard.js"></script>
     <!-- end demo js-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+    <script src="{{ asset('admin-theme/custom-js/custom.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-    $(function () {
-        'use strict';
-        var nowTemp = new Date();
-        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+        var months = [];
+        for (var i = 0; i < 12; i++) {
+            var d = new Date((i + 1) + '/1');
+            months.push(d.toLocaleDateString(undefined, {
+                month: 'short'
+            }));
+        }
+        const data = {
+            labels: months,
+            datasets: [{
+                label: 'My First Dataset',
+                data: <?= json_encode($data ?? []) ?>,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        };
+        const config = {
+            type: 'line',
+            data: data,
+        };
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
 
-        var checkin = $('#timeCheckIn').datepicker({
-            onRender: function (date) {
-                return date.valueOf() < now.valueOf() ? 'disabled' : '';
-            }
-        }).on('changeDate', function (ev) {
-            if (ev.date.valueOf() > checkout.date.valueOf()) {
-                var newDate = new Date(ev.date)
-                newDate.setDate(newDate.getDate() + 1);
-                checkout.setValue(newDate);
-            }
-            checkin.hide();
-            $('#timeCheckOut')[0].focus();
-        }).data('datepicker');
-        var checkout = $('#timeCheckOut').datepicker({
-            onRender: function (date) {
-                return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
-            }
-        }).on('changeDate', function (ev) {
-            checkout.hide();
-        }).data('datepicker');
-    });
-</script>
+    <script>
+        $(function() {
+            'use strict';
+            var nowTemp = new Date();
+            var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+            var checkin = $('#timeCheckIn').datepicker({
+                onRender: function(date) {
+                    return date.valueOf() < now.valueOf() ? 'disabled' : '';
+                }
+            }).on('changeDate', function(ev) {
+                if (ev.date.valueOf() > checkout.date.valueOf()) {
+                    var newDate = new Date(ev.date)
+                    newDate.setDate(newDate.getDate() + 1);
+                    checkout.setValue(newDate);
+                }
+                checkin.hide();
+                $('#timeCheckOut')[0].focus();
+            }).data('datepicker');
+            var checkout = $('#timeCheckOut').datepicker({
+                onRender: function(date) {
+                    return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+                }
+            }).on('changeDate', function(ev) {
+                checkout.hide();
+            }).data('datepicker');
+        });
+    </script>
 </body>
 
 </html>

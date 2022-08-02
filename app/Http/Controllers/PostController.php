@@ -8,6 +8,7 @@ use App\Post;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -131,16 +132,21 @@ class PostController extends Controller
 
     public function homePage(Request $request)
     {
+        $arrayMonth = [];
+        for($i=1;$i <=12; $i++){
+            array_push($arrayMonth, $i);
+        }
         $keyword = $request->keyword;
         $start_date = $request->date;
         $end_date = $request->end_date;
         $category = $request->category;
 
         $posts = Post::where('title', 'like', "%" . $keyword . "%");
+        
         if ($request->author) {
             $posts->where('create_by', $request->author);
         }
-       
+
         if ($start_date) {
             $start_date = date('Y-m-d', strtotime($start_date));
             $posts = $posts->where('created_at', '>=', $start_date);
@@ -150,13 +156,36 @@ class PostController extends Controller
             $posts = $posts->where('created_at', '<=', $end_date);
         }
         if ($category) {
-            $posts = Post::join('category_posts', 'posts.id', '=', 'category_posts.post_id')->where('category_id', $category);
+            $posts = Post::join('category_posts', 'posts.id', '=', 'category_posts.post_id')
+                ->join('category', 'category_posts.category_id', '=', 'category.id')->where('category_posts.category_id', $category);
         }
 
         $posts = $posts->get();
+
+        $month = Post::select(DB::raw('Month(updated_at) as month'));
+        $post = Post::select(DB::raw('COUNT(*) as count'));
+
+        $post = $post->whereIn(DB::raw('MONTH(updated_at)'), $arrayMonth)
+            ->groupBy(DB::raw("Month(updated_at)"))
+            ->pluck('count');
+
+        $month = $month->whereIn(DB::raw('MONTH(updated_at)'), $arrayMonth)
+            ->groupBy(DB::raw("Month(updated_at)"))
+            ->pluck('month');
+        $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        foreach ($month as $index => $mon) {
+            if (!empty($post)) {
+                if (empty($post[$index])) {
+                    $post[$index] = 0;
+                }
+                $data[$mon - 1] = $post[$index];
+            }
+        }
+
         $author = User::all();
         $categories = Category::all();
 
-        return view('post.home', compact('posts', 'author', 'categories'));
+        return view('post.home', compact('posts', 'author', 'categories', 'data'));
     }
 }
