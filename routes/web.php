@@ -16,7 +16,7 @@ use App\Http\Controllers\Auth\LoginController;
 Route::get('/login', 'LoginController@login')->name('login');
 Route::get('/', 'PostController@homePage');
 Route::post('/do-login', 'LoginController@doLogin')->name('do-login');
-
+Route::get('/chart', 'PostController@chartData')->name('nam.db');
 Route::get('/logout', function () {
     Auth::logout();
     return redirect()->route('login');

@@ -14,11 +14,11 @@
                             {{ $val->name }}
                         </strong>
                         <h3 class="mb-0">
-                            <a class="text-dark" href="{{ route('posts.show', $val->id) }}">{{ $val->title }}</a>
+                            <a class="text-dark" href="{{ route('posts.show', $val->post_id ?? $val->id) }}">{{ $val->title }}</a>
                         </h3>
                         <div class="mb-1 text-muted">{{ $val->created_at }} by {{ $val->author->name }}</div>
                         <p class="card-text mb-auto"></p>
-                        <a href="{{ route('posts.show', $val->id) }}">Xem chi tiết</a>
+                        <a href="{{ route('posts.show',  $val->post_id ?? $val->id) }}">Xem chi tiết</a>
                     </div>
                     <img class="card-img-right flex-auto d-none d-md-block" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="{{asset('storage/' . $val->image)}}" data-holder-rendered="true">
                 </div>
@@ -27,10 +27,7 @@
         </div>
         {{ $posts->appends(request()->query())->links() }}
     </div>
-    <canvas id="myChart" style="height: 300px; display: block; box-sizing: border-box;"></canvas>
-    <div class="chart-view" style="max-width: 500px; ">
-        <canvas id="chartCate"></canvas>
-    </div>
+    
 </div>
 
 @endsection

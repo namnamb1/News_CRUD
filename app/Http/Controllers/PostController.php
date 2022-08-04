@@ -132,10 +132,7 @@ class PostController extends Controller
 
     public function homePage(Request $request)
     {
-        $arrayMonth = [];
-        for ($i = 1; $i <= 12; $i++) {
-            array_push($arrayMonth, $i);
-        }
+
 
         $keyword = $request->keyword;
         $start_date = $request->date;
@@ -154,28 +151,49 @@ class PostController extends Controller
 
         if ($start_date) {
             $start_date = date('Y-m-d', strtotime($start_date));
-            $posts = $posts->where('created_at', '>=', $start_date);
+            $posts = $posts->where('posts.created_at', '>=', $start_date);
         }
 
         if ($end_date) {
             $end_date = date('Y-m-d', strtotime($end_date));
-            $posts = $posts->where('created_at', '<=', $end_date);
+            $posts = $posts->where('posts.created_at', '<=', $end_date);
         }
         if ($category) {
             $posts = $posts->join('category_posts', 'posts.id', '=', 'category_posts.post_id')
                 ->join('category', 'category_posts.category_id', '=', 'category.id')->where('category_posts.category_id', $category);
         }
-        
 
-        $posts = $posts->orderBy('posts.id','desc')->paginate(20);
-            //  dd($posts);
 
+        $posts = $posts->orderBy('posts.id', 'desc')->paginate(20);
+
+
+        $author = User::all();
+        $categories = Category::all();
+
+        return view('post.home', compact('posts', 'author', 'categories'));
+    }
+
+    public function chartData(Request $request)
+    {
+        $time = $request->time ?? date("Y");
+        $catePost = $this->categoryPost();
+
+        $year = Post::select(DB::raw('Year(created_at) as year'))
+            ->groupBy(DB::raw("Year(created_at)"))
+            ->pluck('year');
+
+        $arrayMonth = [];
+        for ($i = 1; $i <= 12; $i++) {
+            array_push($arrayMonth, $i);
+        }
         $month = Post::select(DB::raw('Month(created_at) as month'));
         $post = Post::select(DB::raw('COUNT(*) as count'));
-        $post = $post->whereIn(DB::raw('MONTH(created_at)'), $arrayMonth)
+        $post = $post->whereYear('created_at', $time)
+            ->whereIn(DB::raw('MONTH(created_at)'), $arrayMonth)
             ->groupBy(DB::raw("Month(created_at)"))
             ->pluck('count');
-        $month = $month->whereIn(DB::raw('MONTH(created_at)'), $arrayMonth)
+        $month = $month->whereYear('created_at', $time)
+            ->whereIn(DB::raw('MONTH(created_at)'), $arrayMonth)
             ->groupBy(DB::raw("Month(created_at)"))
             ->pluck('month');
         $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -188,11 +206,18 @@ class PostController extends Controller
                 $data[$mon - 1] = $post[$index];
             }
         }
-        // $carbon =  Carbon::now()->subDays(30);
-        // dd($carbon);
-        $author = User::all();
-        $categories = Category::all();
 
-        return view('post.home', compact('posts', 'author', 'categories', 'data'));
+        return view('post.chart', compact('data', 'year', 'catePost', 'time'));
+    }
+
+    public function categoryPost()
+    {
+        $post = Post::select(DB::raw('COUNT(*) as count'), 'category.name as name_cate')
+            ->join('category_posts', 'posts.id', '=', 'category_posts.post_id')
+            ->join('category', 'category_posts.category_id', '=', 'category.id')
+            ->groupBy('category_posts.category_id')
+            ->pluck('count', 'name_cate');
+
+        return $post;
     }
 }

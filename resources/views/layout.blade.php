@@ -354,58 +354,55 @@
                 month: 'short'
             }));
         }
-        // const data = {
-        //     labels: months,
-        //     datasets: [{
-        //         label: 'Số lượng bài viết',
-        //         data: <?= json_encode($data ?? []) ?>,
-        //         fill: false,
-        //         borderColor: 'rgb(75, 192, 192)',
-        //         tension: 0.1
-        //     }]
-        // };
-        // const config = {
-        //     type: 'line',
-        //     data: data,
-        // };
-        // const myChart = new Chart(
-        //     document.getElementById('myChart'),
-        //     config
-        // );
-    </script> 
-
-    <script>
         const data = {
-            labels: [
-                'Red',
-                'Blue',
-                'Yellow'
-            ],
+            labels: months,
             datasets: [{
-                label: 'My First Dataset',
-                data: [300, 50, 100],
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)'
-                ],
-                hoverOffset: 4
+                label: 'Số lượng bài viết ('+<?= json_encode($time ?? date('Y'))?>+')',
+                data: <?= json_encode($data ?? []) ?>,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
             }]
         };
         const config = {
-            type: 'doughnut',
+            type: 'line',
             data: data,
         };
-        module.exports = {
-            actions: [],
-            config: config,
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script> 
+
+    <script>
+        var color = [];
+        for (i = 0; i <= 19; i++) {
+            color[i] = `rgb(${[1,2,3].map(x=>Math.random()*256|0)})`;
+        }
+        const dataDoughnut = <?= json_encode($catePost ?? []) ?>;
+
+        const name = Object.keys(dataDoughnut).map((key) => String(key));
+        const count = Object.keys(dataDoughnut).map((key) => dataDoughnut[key]);
+        const datas = {
+            labels: name,
+            datasets: [{
+                label: 'My First Dataset',
+                data: count,
+                backgroundColor: color,
+                hoverOffset: 4
+            }]
         };
+        const configs = {
+            type: 'doughnut',
+            data: datas,
+        };
+       
     </script>
 
     <script>
-        const myChart = new Chart(
+        const myCharts = new Chart(
             document.getElementById('chartCate'),
-            config
+            configs
         );
     </script>
 
