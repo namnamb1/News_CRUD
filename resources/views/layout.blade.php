@@ -128,11 +128,11 @@
                             </div>
                             <div class="mb-3 col-md-2">
                                 <!-- <div id="datepicker" class="input-group date" data-date-format="dd-mm-yyyy"> -->
-                                <input type="text" id="timeCheckIn" class="form-control" name="date" placeholder="Chọn ngày bắt đầu">
+                                <input type="text" id="timeCheckIn" class="form-control" name="date" placeholder="Chọn ngày bắt đầu" autocomplete="off">
                                 <!-- </div> -->
                             </div>
                             <div class="mb-3 col-md-2">
-                                <input type="text" id="timeCheckOut" class="form-control" name="end_date" placeholder="Chọn ngày kết thúc">
+                                <input type="text" id="timeCheckOut" class="form-control" name="end_date" placeholder="Chọn ngày kết thúc" autocomplete="off">
                             </div>
                             <div class="mb-3 col-md-4">
                                 <button type="submit" class="btn btn-primary">Tìm kiếm</button>
@@ -325,6 +325,7 @@
 
         </div>
     </div>
+    <div id="chart" style="height: 250px;"></div>
 
     <div class="rightbar-overlay"></div>
     <!-- /End-bar -->
@@ -342,9 +343,8 @@
     <!-- demo app -->
     <script src="https://coderthemes.com/hyper/saas/assets/js/pages/demo.dashboard.js"></script>
     <!-- end demo js-->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-    <script src="{{ asset('admin-theme/custom-js/custom.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         var months = [];
@@ -354,22 +354,57 @@
                 month: 'short'
             }));
         }
+        // const data = {
+        //     labels: months,
+        //     datasets: [{
+        //         label: 'Số lượng bài viết',
+        //         data: <?= json_encode($data ?? []) ?>,
+        //         fill: false,
+        //         borderColor: 'rgb(75, 192, 192)',
+        //         tension: 0.1
+        //     }]
+        // };
+        // const config = {
+        //     type: 'line',
+        //     data: data,
+        // };
+        // const myChart = new Chart(
+        //     document.getElementById('myChart'),
+        //     config
+        // );
+    </script> 
+
+    <script>
         const data = {
-            labels: months,
+            labels: [
+                'Red',
+                'Blue',
+                'Yellow'
+            ],
             datasets: [{
                 label: 'My First Dataset',
-                data: <?= json_encode($data ?? []) ?>,
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
+                data: [300, 50, 100],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
             }]
         };
         const config = {
-            type: 'line',
+            type: 'doughnut',
             data: data,
         };
+        module.exports = {
+            actions: [],
+            config: config,
+        };
+    </script>
+
+    <script>
         const myChart = new Chart(
-            document.getElementById('myChart'),
+            document.getElementById('chartCate'),
             config
         );
     </script>

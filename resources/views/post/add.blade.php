@@ -15,6 +15,9 @@
                                         <div class="mb-3">
                                             <label for="simpleinput" class="form-label">Tiêu đề</label>
                                             <input type="text" id="simpleinput" class="form-control" name="title">
+                                            @error('title')
+                                            <span class="font-italic text-danger ">{{ $message }}</span>
+                                            @enderror
                                         </div>
 
                                         <div class="row g-2">
@@ -28,17 +31,26 @@
                                                     </label>
                                                 </div>
                                                 @endforeach
+                                                @error('category')
+                                                <span class="font-italic text-danger ">{{ $message }}</span>
+                                                @enderror
 
                                             </div>
                                             <div class="mb-3 col-md-4">
                                                 <label for="inputZip" class="form-label">Ảnh đại diện</label>
                                                 <input type="file" class="form-control" id="inputZip" name="image">
+                                                @error('image')
+                                                <span class="font-italic text-danger ">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="example-textarea" class="form-label">Nội dung</label>
                                             <textarea class="form-control" id="example-textarea" rows="5" name="content"></textarea>
+                                            @error('content')
+                                            <span class="font-italic text-danger ">{{ $message }}</span>
+                                            @enderror
                                         </div>
 
                                         <button type="submit" class="btn btn-primary">Tạo mới</button>

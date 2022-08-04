@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\CategoryPost;
+use App\Http\Requests\PostRequest;
 use App\Post;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +21,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::orderBy('id', 'desc')->paginate(20);
 
         return view('post.index', compact('posts'));
     }
@@ -42,15 +44,14 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-
         $post = Post::create([
             'title' => $request->title,
             'content' => $request->content,
             'create_by' => Auth::user()->id,
         ]);
-        // dd($request->hasFile('image'));
+
         if ($request->hasFile('image')) {
             $newFileName = uniqid() . '-' . $request->image->getClientOriginalName();
             $imagePath = $request->image->storeAs('public/images/', $newFileName);
@@ -70,7 +71,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
 
         return view('post.detail', compact('post'));
     }
@@ -96,13 +97,12 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
         $post = Post::find($id);
         $post->fill([
             'title' => $request->title,
             'content' => $request->content,
-            'create_by' => Auth::user()->id,
         ]);
 
         if ($request->hasFile('image')) {
@@ -133,44 +133,50 @@ class PostController extends Controller
     public function homePage(Request $request)
     {
         $arrayMonth = [];
-        for($i=1;$i <=12; $i++){
+        for ($i = 1; $i <= 12; $i++) {
             array_push($arrayMonth, $i);
         }
+
         $keyword = $request->keyword;
         $start_date = $request->date;
         $end_date = $request->end_date;
         $category = $request->category;
 
-        $posts = Post::where('title', 'like', "%" . $keyword . "%");
-        
+        $posts = new Post();
+
+        if ($keyword) {
+            $posts = $posts->where('title', 'like', "%" . $keyword . "%");
+        }
+
         if ($request->author) {
-            $posts->where('create_by', $request->author);
+            $posts = $posts->where('create_by', $request->author);
         }
 
         if ($start_date) {
             $start_date = date('Y-m-d', strtotime($start_date));
             $posts = $posts->where('created_at', '>=', $start_date);
         }
+
         if ($end_date) {
             $end_date = date('Y-m-d', strtotime($end_date));
             $posts = $posts->where('created_at', '<=', $end_date);
         }
         if ($category) {
-            $posts = Post::join('category_posts', 'posts.id', '=', 'category_posts.post_id')
+            $posts = $posts->join('category_posts', 'posts.id', '=', 'category_posts.post_id')
                 ->join('category', 'category_posts.category_id', '=', 'category.id')->where('category_posts.category_id', $category);
         }
+        
 
-        $posts = $posts->get();
+        $posts = $posts->orderBy('posts.id','desc')->paginate(20);
+            //  dd($posts);
 
-        $month = Post::select(DB::raw('Month(updated_at) as month'));
+        $month = Post::select(DB::raw('Month(created_at) as month'));
         $post = Post::select(DB::raw('COUNT(*) as count'));
-
-        $post = $post->whereIn(DB::raw('MONTH(updated_at)'), $arrayMonth)
-            ->groupBy(DB::raw("Month(updated_at)"))
+        $post = $post->whereIn(DB::raw('MONTH(created_at)'), $arrayMonth)
+            ->groupBy(DB::raw("Month(created_at)"))
             ->pluck('count');
-
-        $month = $month->whereIn(DB::raw('MONTH(updated_at)'), $arrayMonth)
-            ->groupBy(DB::raw("Month(updated_at)"))
+        $month = $month->whereIn(DB::raw('MONTH(created_at)'), $arrayMonth)
+            ->groupBy(DB::raw("Month(created_at)"))
             ->pluck('month');
         $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -182,7 +188,8 @@ class PostController extends Controller
                 $data[$mon - 1] = $post[$index];
             }
         }
-
+        // $carbon =  Carbon::now()->subDays(30);
+        // dd($carbon);
         $author = User::all();
         $categories = Category::all();
 
