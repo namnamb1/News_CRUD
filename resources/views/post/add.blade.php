@@ -47,7 +47,7 @@
 
                                         <div class="mb-3">
                                             <label for="example-textarea" class="form-label">Nội dung</label>
-                                            <textarea class="form-control" id="example-textarea" rows="5" name="content"></textarea>
+                                            <textarea id="editor" class="form-control" id="example-textarea" rows="5" name="content"></textarea>
                                             @error('content')
                                             <span class="font-italic text-danger ">{{ $message }}</span>
                                             @enderror

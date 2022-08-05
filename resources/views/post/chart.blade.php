@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-md-8 blog-main">
         <form action="{{ route('nam.db') }}" method="GET" class="row" style="margin-bottom:20px !important">
-            <div class="mb-3 col-md-2">
+            <div class="col-md-2">
                 <select name="time" class="form-select  mb-3">
                     <option value="">Chọn năm</option>
                     @if(isset($year))
@@ -13,13 +13,21 @@
                     @endif
                 </select>
             </div>
-            <div class="mb-3 col-md-4">
-                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary">Chọn năm</button>
             </div>
         </form>
-        <canvas id="myChart" style="height: 300px; display: block; box-sizing: border-box;"></canvas>
-        <div class="chart-view" style="max-width: 500px; ">
+        <div class="p-3">
+            <canvas id="myChart" style="height: 300px; display: block; box-sizing: border-box;"></canvas>
+        </div>
+        <div class="p-3" style="max-width: 500px; ">
+            <h3>Số lượng bài viết theo danh mục</h3>
             <canvas id="chartCate"></canvas>
+        </div>
+
+        <div class="p-3" style="max-width: 500px; ">
+            <h3>Số lượng bài viết 6 tháng gần nhất</h3>
+            <canvas id="chartMonth"></canvas>
         </div>
     </div>
     @endsection

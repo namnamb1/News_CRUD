@@ -53,7 +53,7 @@
                                             @enderror
                                         </div>
 
-                                        <button type="submit" class="btn btn-primary">Tạo mới</button>
+                                        <button type="submit" class="btn btn-primary">Sửa bài viết</button>
 
                                     </form>
                                 </div> <!-- end col -->

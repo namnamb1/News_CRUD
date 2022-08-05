@@ -55,28 +55,25 @@
 
                     <li class="side-nav-item">
                         <a class="side-nav-link" href="{{asset('/')}}">
-                            <i class="uil-home-alt"></i>
-                            <span> Dashboards </span>
+                            <span> Trang chủ </span>
                         </a>
                     </li>
-
-                    <li class="side-nav-title side-nav-item">Apps</li>
-
-
-
+                    <li class="side-nav-item">
+                        <a class="side-nav-link" href="{{asset('/chart')}}">
+                            <span> Biểu đồ </span>
+                        </a>
+                    </li>
                     <li class="side-nav-item">
                         <a data-bs-toggle="collapse" href="#sidebarCrm" aria-expanded="false" aria-controls="sidebarCrm" class="side-nav-link">
-                            <i class="uil uil-tachometer-fast"></i>
-                            <!-- <span class="badge bg-danger text-white float-end">New</span> -->
-                            <span> Posts </span>
+                            <span> Bài viết </span>
                         </a>
                         <div class="collapse" id="sidebarCrm">
                             <ul class="side-nav-second-level">
                                 <li>
-                                    <a href="{{ route('posts.index') }}">List Posts</a>
+                                    <a href="{{ route('posts.index') }}">Danh sách bài viết</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('posts.create') }}">Create Posts</a>
+                                    <a href="{{ route('posts.create') }}">Tạo mới bài viết</a>
                                 </li>
                             </ul>
                         </div>
@@ -99,103 +96,9 @@
 
         <div class="content-page">
             <div class="content">
-                <!-- Topbar Start -->
-                <div class="navbar-">
-                    <div class="app-search dropdown d-none d-lg-block">
-                        <form class="row" style="margin-bottom:20px !important">
-                            <div class="mb-3 col-md-2">
-                                <input type="search" name="keyword" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2">
-                            </div>
-                            <div class="mb-3 col-md-2">
-                                <select name="author" class="form-select  mb-3">
-                                    <option value="">Tác giả</option>
-                                    @if(isset($author))
-                                    @foreach($author as $val)
-                                    <option value="{{ $val->id }}"> {{ $val->name }} </option>
-                                    @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                            <div class="mb-3 col-md-2">
-                                <select name="category" class="form-select  mb-3">
-                                    <option value="">Danh mục</option>
-                                    @if(isset($categories))
-                                    @foreach($categories as $val)
-                                    <option value="{{ $val->id }}"> {{ $val->name }} </option>
-                                    @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                            <div class="mb-3 col-md-2">
-                                <!-- <div id="datepicker" class="input-group date" data-date-format="dd-mm-yyyy"> -->
-                                <input type="text" id="timeCheckIn" class="form-control" name="date" placeholder="Chọn ngày bắt đầu" autocomplete="off">
-                                <!-- </div> -->
-                            </div>
-                            <div class="mb-3 col-md-2">
-                                <input type="text" id="timeCheckOut" class="form-control" name="end_date" placeholder="Chọn ngày kết thúc" autocomplete="off">
-                            </div>
-                            <div class="mb-3 col-md-4">
-                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                            </div>
-                        </form>
-
-                        <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
-                            <!-- item-->
-                            <div class="dropdown-header noti-title">
-                                <h5 class="text-overflow mb-2">Found <span class="text-danger">17</span> results</h5>
-                            </div>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="uil-notes font-16 me-1"></i>
-                                <span>Analytics Report</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="uil-life-ring font-16 me-1"></i>
-                                <span>How can I help you?</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="uil-cog font-16 me-1"></i>
-                                <span>User profile settings</span>
-                            </a>
-
-                            <!-- item-->
-                            <div class="dropdown-header noti-title">
-                                <h6 class="text-overflow mb-2 text-uppercase">Users</h6>
-                            </div>
-
-                            <div class="notification-list">
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <div class="d-flex">
-                                        <img class="d-flex me-2 rounded-circle" src="assets/images/users/avatar-2.jpg" alt="Generic placeholder image" height="32">
-                                        <div class="w-100">
-                                            <h5 class="m-0 font-14">Erwin Brown</h5>
-                                            <span class="font-12 mb-0">UI Designer</span>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <div class="d-flex">
-                                        <img class="d-flex me-2 rounded-circle" src="assets/images/users/avatar-5.jpg" alt="Generic placeholder image" height="32">
-                                        <div class="w-100">
-                                            <h5 class="m-0 font-14">Jacob Deo</h5>
-                                            <span class="font-12 mb-0">Developer</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end Topbar -->
-
+                @if( session('message') != null)
+                <li class="alert alert-success">{{ session('message') }}</li>
+                @endif
                 <!-- Start Content-->
                 <div class="container-fluid">
                     @section('main-content')
@@ -329,6 +232,8 @@
 
     <div class="rightbar-overlay"></div>
     <!-- /End-bar -->
+    <!-- Ckeditor -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
 
     <!-- bundle -->
     <script src="https://coderthemes.com/hyper/saas/assets/js/vendor.min.js"></script>
@@ -354,10 +259,11 @@
                 month: 'short'
             }));
         }
+        console.log(months);
         const data = {
             labels: months,
             datasets: [{
-                label: 'Số lượng bài viết ('+<?= json_encode($time ?? date('Y'))?>+')',
+                label: 'Số lượng bài viết (' + <?= json_encode($time ?? date('Y')) ?> + ')',
                 data: <?= json_encode($data ?? []) ?>,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
@@ -372,7 +278,7 @@
             document.getElementById('myChart'),
             config
         );
-    </script> 
+    </script>
 
     <script>
         var color = [];
@@ -383,6 +289,7 @@
 
         const name = Object.keys(dataDoughnut).map((key) => String(key));
         const count = Object.keys(dataDoughnut).map((key) => dataDoughnut[key]);
+
         const datas = {
             labels: name,
             datasets: [{
@@ -396,13 +303,55 @@
             type: 'doughnut',
             data: datas,
         };
-       
-    </script>
 
-    <script>
         const myCharts = new Chart(
             document.getElementById('chartCate'),
             configs
+        );
+    </script>
+
+    <script>
+        const labels = <?= json_encode($lastMonth ?? []) ?>;
+        const dataMonth = {
+            labels: labels,
+            datasets: [{
+                label: 'Số lượng bài viết',
+                data: <?= json_encode($postChartMonth ?? []) ?>,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const configMonth = {
+            type: 'bar',
+            data: dataMonth,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            },
+        };
+
+        const myChartMonth = new Chart(
+            document.getElementById('chartMonth'),
+            configMonth
         );
     </script>
 
@@ -433,6 +382,16 @@
                 checkout.hide();
             }).data('datepicker');
         });
+    </script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .then(editor => {
+                console.log(editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
     </script>
 </body>
 

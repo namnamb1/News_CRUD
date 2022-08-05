@@ -60,7 +60,8 @@ class PostController extends Controller
         $post->save();
 
         Post::find($post->id)->category()->attach($request->category);
-        return redirect('posts');
+
+        return redirect('posts')->with(['message' => 'Thêm bài viết thành công']);
     }
 
     /**
@@ -114,7 +115,7 @@ class PostController extends Controller
 
         Post::find($id)->category()->sync($request->category);
 
-        return redirect('/posts');
+        return redirect('/posts')->with(['message' => 'Cập nhật bài viết thành công']);
     }
 
     /**
@@ -132,8 +133,6 @@ class PostController extends Controller
 
     public function homePage(Request $request)
     {
-
-
         $keyword = $request->keyword;
         $start_date = $request->date;
         $end_date = $request->end_date;
@@ -158,14 +157,13 @@ class PostController extends Controller
             $end_date = date('Y-m-d', strtotime($end_date));
             $posts = $posts->where('posts.created_at', '<=', $end_date);
         }
+
         if ($category) {
             $posts = $posts->join('category_posts', 'posts.id', '=', 'category_posts.post_id')
                 ->join('category', 'category_posts.category_id', '=', 'category.id')->where('category_posts.category_id', $category);
         }
 
-
         $posts = $posts->orderBy('posts.id', 'desc')->paginate(20);
-
 
         $author = User::all();
         $categories = Category::all();
@@ -196,7 +194,8 @@ class PostController extends Controller
             ->whereIn(DB::raw('MONTH(created_at)'), $arrayMonth)
             ->groupBy(DB::raw("Month(created_at)"))
             ->pluck('month');
-        $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         foreach ($month as $index => $mon) {
             if (!empty($post)) {
@@ -205,9 +204,22 @@ class PostController extends Controller
                 }
                 $data[$mon - 1] = $post[$index];
             }
-        }
+        } // end chart year
 
-        return view('post.chart', compact('data', 'year', 'catePost', 'time'));
+        $lastMonth = Post::query()
+            ->groupByRaw('DATE_FORMAT(created_at,\'%m\')')
+            ->selectRaw('DATE_FORMAT(created_at,\'%m\') as date')
+            ->where("created_at", ">", Carbon::now()->subMonths(5)) // lấy ra 6 tháng gần nhất
+            ->pluck('date');
+
+        $postChartMonth = Post::select(DB::raw('COUNT(*) as count'),);
+        $postChartMonth = $postChartMonth->whereYear('created_at', date('Y'))
+            ->whereIn(DB::raw('MONTH(created_at)'), $lastMonth)
+            ->groupBy(DB::raw("Month(created_at)"))
+            ->pluck('count');
+        
+
+        return view('post.chart', compact('data', 'year', 'catePost', 'time', 'lastMonth', 'postChartMonth'));
     }
 
     public function categoryPost()
