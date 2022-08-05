@@ -232,8 +232,7 @@
 
     <div class="rightbar-overlay"></div>
     <!-- /End-bar -->
-    <!-- Ckeditor -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
+
 
     <!-- bundle -->
     <script src="https://coderthemes.com/hyper/saas/assets/js/vendor.min.js"></script>
@@ -251,6 +250,24 @@
     <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
+
+    <script>
+        // import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder';
+        ClassicEditor
+            .create(document.querySelector('#txt-content'), {
+                ckfinder: {
+                    uploadUrl: '{{ route('upload.image').'?_token='.csrf_token() }}'
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+
+
     <script>
         var months = [];
         for (var i = 0; i < 12; i++) {
@@ -259,7 +276,6 @@
                 month: 'short'
             }));
         }
-        console.log(months);
         const data = {
             labels: months,
             datasets: [{
@@ -383,16 +399,7 @@
             }).data('datepicker');
         });
     </script>
-    <script>
-        ClassicEditor
-            .create(document.querySelector('#editor'))
-            .then(editor => {
-                console.log(editor);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    </script>
+
 </body>
 
 </html>

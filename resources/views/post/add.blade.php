@@ -37,6 +37,9 @@
 
                                             </div>
                                             <div class="mb-3 col-md-4">
+                                                <div class="preview-images">
+
+                                                </div>
                                                 <label for="inputZip" class="form-label">Ảnh đại diện</label>
                                                 <input type="file" class="form-control" id="inputZip" name="image">
                                                 @error('image')
@@ -47,7 +50,8 @@
 
                                         <div class="mb-3">
                                             <label for="example-textarea" class="form-label">Nội dung</label>
-                                            <textarea id="editor" class="form-control" id="example-textarea" rows="5" name="content"></textarea>
+                                            <textarea id="txt-content" class="form-control txt-content" rows="5" name="content"></textarea>
+                                           
                                             @error('content')
                                             <span class="font-italic text-danger ">{{ $message }}</span>
                                             @enderror

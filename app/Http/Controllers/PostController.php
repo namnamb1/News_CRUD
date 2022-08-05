@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -217,7 +218,7 @@ class PostController extends Controller
             ->whereIn(DB::raw('MONTH(created_at)'), $lastMonth)
             ->groupBy(DB::raw("Month(created_at)"))
             ->pluck('count');
-        
+
 
         return view('post.chart', compact('data', 'year', 'catePost', 'time', 'lastMonth', 'postChartMonth'));
     }
@@ -231,5 +232,26 @@ class PostController extends Controller
             ->pluck('count', 'name_cate');
 
         return $post;
+    }
+
+    public function uploadImage(Request $request)
+    {
+        try {
+            // Đoạn này là đoạn lưu file, file sẽ nằm trong param có tên là 'upload'
+            $image = Post::withFile($request->file('upload'))->save();
+
+            return response()->json([
+                'fileName' => basename($image),
+                'uploaded' => 1,
+                'url' => Storage::disk('public')->url($image),
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'uploaded' => 0,
+                'error' => [
+                    'message' => $e->getMessage(),
+                ],
+            ]);
+        }
     }
 }
