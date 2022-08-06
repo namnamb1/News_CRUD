@@ -17,7 +17,35 @@
     <!-- App css -->
     <link href="https://coderthemes.com/hyper/saas/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="https://coderthemes.com/hyper/saas/assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
-
+    <style>
+        .thumb-cover {
+            overflow: hidden;
+        }
+        .thumb-cover img {
+            width: 100%!important;
+            height: 100%!important;
+            object-fit: cover!important;
+        }
+        img {
+            display: block;
+            padding: 0;
+            outline: none;
+            border: none;
+        }
+        .post-image-thumb{
+            display: block;
+            color: #333;
+            height: 230px;
+            width: 230px;
+            overflow: hidden;
+        }
+        .with-550px{
+            width: 500px;
+        }
+        .text{
+            height: 750px;
+        }
+    </style>
 </head>
 
 <body class="loading" data-layout-color="light" data-leftbar-theme="dark" data-layout-mode="fluid" data-rightbar-onstart="true">
@@ -50,8 +78,6 @@
 
                 <!--- Sidemenu -->
                 <ul class="side-nav">
-
-                    <li class="side-nav-title side-nav-item">Navigation</li>
 
                     <li class="side-nav-item">
                         <a class="side-nav-link" href="{{asset('/')}}">
@@ -250,22 +276,15 @@
     <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-    <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
-
+    @include('ckfinder::setup')
+    <script src={{ url('ckeditor/ckeditor.js') }}></script>
     <script>
-        // import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder';
-        ClassicEditor
-            .create(document.querySelector('#txt-content'), {
-                ckfinder: {
-                    uploadUrl: '{{ route('upload.image').'?_token='.csrf_token() }}'
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
+    CKEDITOR.replace( 'text', {
+        height: '550px',
+        filebrowserBrowseUrl: '{{ route('ckfinder_browser') }}',
+    } );
     </script>
+
 
 
     <script>

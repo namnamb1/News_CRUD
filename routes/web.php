@@ -22,6 +22,11 @@ Route::get('/logout', function () {
     return redirect()->route('login');
 })->name('logout');
 
-Route::post('/upload','PostController@uploadImage')->name('upload.image');
-
 Route::resource('/posts', PostController::class)->middleware('checklogin');
+
+
+Route::any('/ckfinder/connector', '\CKSource\CKFinderBridge\Controller\CKFinderController@requestAction')
+    ->name('ckfinder_connector');
+
+Route::any('/ckfinder/browser', '\CKSource\CKFinderBridge\Controller\CKFinderController@browserAction')
+    ->name('ckfinder_browser');

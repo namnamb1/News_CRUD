@@ -20,7 +20,10 @@
                                             <span class="font-italic text-danger ">{{ $message }}</span>
                                             @enderror
                                         </div>
-
+                                        <div class="mb-3">
+                                            <label for="example-textarea" class="form-label">Mô tả</label>
+                                            <textarea class="form-control " rows="5" name="short_description">{{ $post->short_description }}</textarea>
+                                        </div>
                                         <div class="row g-2">
                                             <div class="mb-3 col-md-4">
                                                 <label for="simpleinput" class="form-label">Danh mục</label>
@@ -40,14 +43,16 @@
                                                 <label for="inputZip" class="form-label">Ảnh đại diện</label>
                                                 <input type="file" class="form-control" id="inputZip" name="image">
                                                 @if($post->image)
-                                                <img class="card-img-right flex-auto d-none d-md-block" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="{{asset('storage/' . $post->image)}}" data-holder-rendered="true">
+                                                <div class="post-image-thumb thumb-cover">
+                                                    <img  alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="{{asset('storage/' . $post->image)}}" data-holder-rendered="true">
+                                                </div>
                                                 @endif
                                             </div>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="example-textarea" class="form-label">Nội dung</label>
-                                            <textarea class="form-control" id="example-textarea" rows="5" name="content">{{$post->content}}</textarea>
+                                            <textarea class="text" id="text" rows="5" name="content">{!! $post->content !!}</textarea>
                                             @error('content')
                                             <span class="font-italic text-danger ">{{ $message }}</span>
                                             @enderror

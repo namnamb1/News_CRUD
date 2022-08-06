@@ -100,7 +100,7 @@
             @foreach($posts as $val)
             <div class="col-md-6">
                 <div class="card flex-md-row mb-4 box-shadow h-md-250">
-                    <div class="card-body d-flex flex-column align-items-start">
+                    <div class="card-body d-flex flex-column align-items-start with-550px">
                         <strong class="d-inline-block mb-2 text-primary">
                             @foreach($val->category as $cate)
                             {{ $cate->name }}
@@ -114,14 +114,15 @@
                         <p class="card-text mb-auto"></p>
                         <a href="{{ route('posts.show',  $val->post_id ?? $val->id) }}">Xem chi tiết</a>
                     </div>
-                    <img class="card-img-right flex-auto d-none d-md-block" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="{{asset('storage/' . $val->image)}}" data-holder-rendered="true">
+                    <div class="post-image-thumb thumb-cover">
+                        <img src="{{asset('storage/' . $val->image)}}">
+                    </div>
                 </div>
             </div>
             @endforeach
         </div>
         {{ $posts->appends(request()->query())->links() }}
     </div>
-
 </div>
 
 @endsection

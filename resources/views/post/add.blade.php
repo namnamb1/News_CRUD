@@ -19,6 +19,11 @@
                                             <span class="font-italic text-danger ">{{ $message }}</span>
                                             @enderror
                                         </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="example-textarea" class="form-label">Mô tả</label>
+                                            <textarea  class="form-control " rows="5" name="short_description"></textarea>
+                                        </div>
 
                                         <div class="row g-2">
                                             <div class="mb-3 col-md-4">
@@ -50,7 +55,7 @@
 
                                         <div class="mb-3">
                                             <label for="example-textarea" class="form-label">Nội dung</label>
-                                            <textarea id="txt-content" class="form-control txt-content" rows="5" name="content"></textarea>
+                                            <textarea class="text" id="text" class="form-control txt-content" rows="5" name="content"></textarea>
                                            
                                             @error('content')
                                             <span class="font-italic text-danger ">{{ $message }}</span>

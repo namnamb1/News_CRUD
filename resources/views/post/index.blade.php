@@ -11,9 +11,9 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Title</th>
-                        <th>Content</th>
-                        <th>Action</th>
+                        <th>Tiều đề</th>
+                        <th>Mô tả</th>
+                        <th>Sửa</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,7 +21,7 @@
                     <tr>
                         <td>{{ $val->id }}</td>
                         <td>{{ $val->title }}</td>
-                        <td>{{ $val->content }}</td>
+                        <td>{{ $val->short_description }}</td>
                         <td>
                             <a class="btn btn-primary" href="{{ asset('posts/'.$val->id.'/edit') }}">Edit</a>
                             <form action="{{ route('posts.destroy',$val->id) }}" method="post">

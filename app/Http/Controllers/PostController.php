@@ -50,9 +50,9 @@ class PostController extends Controller
         $post = Post::create([
             'title' => $request->title,
             'content' => $request->content,
+            'short_description' => $request->short_description,
             'create_by' => Auth::user()->id,
         ]);
-
         if ($request->hasFile('image')) {
             $newFileName = uniqid() . '-' . $request->image->getClientOriginalName();
             $imagePath = $request->image->storeAs('public/images/', $newFileName);
@@ -105,6 +105,7 @@ class PostController extends Controller
         $post->fill([
             'title' => $request->title,
             'content' => $request->content,
+            'short_description' => $request->short_description,
         ]);
 
         if ($request->hasFile('image')) {
@@ -219,7 +220,6 @@ class PostController extends Controller
             ->groupBy(DB::raw("Month(created_at)"))
             ->pluck('count');
 
-
         return view('post.chart', compact('data', 'year', 'catePost', 'time', 'lastMonth', 'postChartMonth'));
     }
 
@@ -234,24 +234,4 @@ class PostController extends Controller
         return $post;
     }
 
-    public function uploadImage(Request $request)
-    {
-        try {
-            // Đoạn này là đoạn lưu file, file sẽ nằm trong param có tên là 'upload'
-            $image = Post::withFile($request->file('upload'))->save();
-
-            return response()->json([
-                'fileName' => basename($image),
-                'uploaded' => 1,
-                'url' => Storage::disk('public')->url($image),
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'uploaded' => 0,
-                'error' => [
-                    'message' => $e->getMessage(),
-                ],
-            ]);
-        }
-    }
 }
